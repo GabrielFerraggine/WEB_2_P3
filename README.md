@@ -45,6 +45,23 @@ http://localhost/TPE_WEB_2_P3/api/helados/3 //para GET por id, DELETE, PUT
     }
 ]        
 ```
+### En este apartado estan los Opcionales del trabajo
+
+-Si el consumidor lo desea puede hacer combinaciones de los opcionales.
+
+-( 1er Opcional ) : Si el consumidor lo desea puede hacer un "order" con (ID_Helados, Nombre, Subcategoria, Peso, Precio_Costo, Precio_Venta, ID_Heladeria) y "sort" con (ASC,DESC) pasandolos por URL.
+    Aclaracion: por default sort = ID_Helados y order ASC. tal cual como se veria en la tabla de la base de datos
+
+-Ejemplo del Opcional 1: http://localhost/WEB_2_P3/api/helados?order=Peso&sort=DESC
+
+-( 2do Opcional ) : Si el consumidor lo desea puede hacer un "limitPage" con un valor entero limitando las solicitudes por pagina y "page" con un valor entero siendo el numero de pagina pasandolos por URL.
+    Aclaracion: por default limitPage = 5 y page = 1.
+
+-Ejemplo del Opcional 2: http://localhost/WEB_2_P3/api/helados?limitPage=3&page=1
+
+-( 3er Opcional ) : Si el consumidor lo desea puede filtrar los helados pasando la columna a "queryFiltro"=(ID_Helados, Nombre, Subcategoria, Peso, Precio_Costo, Precio_Venta, ID_Heladeria) y el valor deseado en "filtro".
+
+-Ejemplo del Opcional 3: http://localhost/WEB_2_P3/api/helados?queryFiltro=Nombre&filtro=Chocolate
 
 ### Crear un helado (POST)
 
