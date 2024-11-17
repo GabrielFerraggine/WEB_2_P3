@@ -14,13 +14,57 @@ class ControllerHelados {
         $this->modelParlor = new modelheladerias();//usada para POST y PUT
     }
     //solicita todos los item de helados
-    public function returnIceCreams() {
-        $order= 'Nombre';
-        $sort = 'DESC';
-        // Definir campos y órdenes permitidos
-        $allowedFields = ['Nombre'];  
-        $allowedOrders = ['ASC', 'DESC'];
-        $iceCreams = $this->model->getIceCreams($sort, $order);        
+    public function returnIceCreams($req) {
+        $page= 1;//pagina actual
+        $limitPage=5;//limite por pagina
+        $order = 'ID_Helados';
+        $sort = 'ASC';
+        $filtro = 1;
+        $queryFiltro= "ID_Heladerias";
+        // Filtro
+        if(isset($req->query->queryFiltro) && isset($req->query->filtro) ){
+            if($req->query->queryFiltro!='ID_Helados'||$req->query->queryFiltro!='Nombre'||$req->query->queryFiltro!='Subcategorias'||$req->query->queryFiltro!='Peso'||$req->query->queryFiltro!='Precio_Costo'||$req->query->queryFiltro!='Precio_Venta'||$req->query->queryFiltro!='ID_Heladerias') {
+                $queryFiltro = $req->query->queryFiltro;
+                $filtro = $req->query->filtro;
+            }else {
+                return $this->view->response("No se puede filtrar por " .  $req->query->queryFiltro , 400);
+            }
+        }
+        // Ordenamiento
+        if(isset($req->query->order)){
+            if($req->query->order!='ID_Helados'||$req->query->order!='Nombre'||$req->query->order!='Subcategorias'||$req->query->order!='Peso'||$req->query->order!='Precio_Costo'||$req->query->order!='Precio_Venta'||$req->query->order!='ID_Heladerias') {
+                $order = $req->query->order;
+            }else {
+                return $this->view->response("No se puede ordenar por " .  $req->query->order , 400);
+            }
+        }
+        if(isset($req->query->sort)){
+            if (($req->query->sort != 'DESC') || ($req->query->sort != 'ASC')){
+                $sort = $req->query->sort;
+            }else { 
+                return $this->view->response("No se puede ordenar de manera " . $req->query->sort, 400);
+            }
+        }
+        //paginado
+        if(isset($req->query->limitPage) || isset($req->query->page)){
+            if(isset($req->query->limitPage)){
+                if (($req->query->limitPage > 0)){
+                    $limitPage = intval($req->query->limitPage);
+                }else{
+                    $this->view->response("El limite no puede ser " . $req->query->limitPage, 400);
+                }
+            }
+            if(isset($req->query->page)){
+                if (($req->query->page > 0)){
+                    $page = intval($req->query->page);
+                }else{
+                    $this->view->response("El numero de la pagina no puede ser " . $req->query->page, 400);
+                }
+            }
+        }
+        $offset = ($page - 1) * $limitPage; //Formula el cual calcula cuantos elementos salteara
+        //solicitud
+        $iceCreams = $this->model->getIceCreams($sort, $order, $limitPage, $offset, $queryFiltro, $filtro);        
         return $this->view->response($iceCreams, 200);
     }
     //solicita un item de helados

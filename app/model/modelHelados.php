@@ -25,12 +25,27 @@ class ModelHelados extends Model {
         $query->execute([$name_helado, $name_subcategory, $weight, $price_cost, $price_sale, $ID_Heladerias, $Foto_Helados, $ID_Helados]);
     }
     //devuelve todos los helados de la db
-    public function getIceCreams($sort, $orderBy = false) {
-        $sql = 'SELECT * FROM helados';
-        if($orderBy) {
-            switch($orderBy) {
+    public function getIceCreams($sort, $order, $page, $offset, $queryFiltro, $filtro) {
+        $sql = 'SELECT * FROM helados WHERE ' . $queryFiltro . ' = ? ';
+        if($order) {
+            switch($order) {
+                case 'ID_Helados':
+                    $sql .= ' ORDER BY ID_Heladerias';
+                break;
                 case 'Nombre':
                     $sql .= ' ORDER BY Nombre';
+                break;
+                case 'Subcategorias':
+                    $sql .= ' ORDER BY Subcategorias';
+                break;
+                case 'Peso':
+                    $sql .= ' ORDER BY Peso';
+                break;
+                case 'Precio_Costo':
+                    $sql .= ' ORDER BY Precio_Costo';
+                break;
+                case 'Precio_Venta':
+                    $sql .= ' Precio_Venta';
                 break;
                 case 'ID_Heladerias':
                     $sql .= ' ORDER BY ID_Heladerias';
@@ -43,9 +58,10 @@ class ModelHelados extends Model {
                 $sql .=' DESC';
             }
         }
+        $sql .= ' LIMIT ' . $page . ' OFFSET ' . $offset;
          // 2. Ejecuto la consulta
          $query = $this->db->prepare($sql);
-         $query->execute();
+         $query->execute([$filtro]);
          $IceCreams = $query->fetchAll(PDO::FETCH_OBJ); 
          return $IceCreams;
     }
